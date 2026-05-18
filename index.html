@@ -201,7 +201,8 @@
             transition: transform 0.3s, box-shadow 0.3s;
         }
         .gallery-item:hover { transform: scale(1.02); box-shadow: 0 8px 25px rgba(0,0,0,0.12); }
-        .gallery-item img { width: 100%; height: 100%; display: block; border-radius: 12px; object-fit: cover; }
+        .gallery-item img { width: 100%; height: 100%; display: block; border-radius: 12px; object-fit: cover; background: linear-gradient(135deg, #ebedf0 25%, #f4f5f7 50%, #ebedf0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
         .gallery-lightbox {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.9); z-index: 5000;
@@ -520,7 +521,7 @@
                 </div>
                 <div style="margin-top: 45px;">
                     <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 15px;">江湖再见，加个微信</p>
-                    <img alt="微信二维码" src="img/wx.png" style="width: 220px; border-radius: 16px; box-shadow: 0 6px 20px rgba(0,0,0,0.1);">
+                    <img alt="微信二维码" src="img/wx.webp" style="width: 220px; border-radius: 16px; box-shadow: 0 6px 20px rgba(0,0,0,0.1);">
                 </div>
                 <div style="margin-top: 50px; display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
                     <button class="btn btn-secondary" onclick="restartJourney()">再看一遍</button>
@@ -1139,8 +1140,9 @@
 
             grid.innerHTML = photos.map(p => {
                 const hasCaption = captions[p];
+                const name = p.replace('.jpg', '');
                 return `<div class="gallery-item">
-                    <img data-src="img/gallery/${p}" data-name="${p}" alt="" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200'%3E%3Crect fill='%23ebedf0' width='300' height='200'/%3E%3C/svg%3E">
+                    <img data-src="img/gallery/thumb/${name}.webp" data-full="img/gallery/${p}" data-name="${p}" alt="" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200'%3E%3Crect fill='%23ebedf0' width='300' height='200'/%3E%3C/svg%3E">
                     ${hasCaption ? '<span style="position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,0.5);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;">💬</span>' : ''}
                 </div>`;
             }).join('');
@@ -1155,15 +1157,15 @@
                         imgObs.unobserve(img);
                     }
                 });
-            }, { rootMargin: '200px' });
+            }, { rootMargin: '800px' });
             grid.querySelectorAll('img[data-src]').forEach(img => imgObs.observe(img));
 
             grid.addEventListener('click', (e) => {
                 const item = e.target.closest('.gallery-item');
                 if (!item) return;
                 const img = item.querySelector('img');
-                if (img && img.dataset.src) {
-                    lightboxImg.src = img.dataset.src;
+                if (img && img.dataset.full) {
+                    lightboxImg.src = img.dataset.full;
                     const cap = captions[img.dataset.name];
                     lightboxCaption.textContent = cap || '';
                     lightboxCaption.style.display = cap ? 'block' : 'none';
@@ -1175,9 +1177,9 @@
         // === 启动 ===
         window.onload = () => {
             if (window.innerWidth > 768) {
-                document.getElementById('mascot22').src = 'img/22.png';
-                document.getElementById('mascot33').src = 'img/33.png';
-                document.getElementById('mascotluo').src = 'img/luo.png';
+                document.getElementById('mascot22').src = 'img/22.webp';
+                document.getElementById('mascot33').src = 'img/33.webp';
+                document.getElementById('mascotluo').src = 'img/luo.webp';
             }
             initHeatmap();
             initOdometer();
