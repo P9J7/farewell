@@ -1147,18 +1147,11 @@
                 </div>`;
             }).join('');
 
-            const imgObs = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const img = entry.target;
-                        img.src = img.dataset.src;
-                        img.style.opacity = '0';
-                        img.onload = () => { img.style.transition = 'opacity 0.5s'; img.style.opacity = '1'; };
-                        imgObs.unobserve(img);
-                    }
-                });
-            }, { rootMargin: '800px' });
-            grid.querySelectorAll('img[data-src]').forEach(img => imgObs.observe(img));
+            grid.querySelectorAll('img[data-src]').forEach(img => {
+                img.src = img.dataset.src;
+                img.style.opacity = '0';
+                img.onload = () => { img.style.transition = 'opacity 0.5s'; img.style.opacity = '1'; };
+            });
 
             grid.addEventListener('click', (e) => {
                 const item = e.target.closest('.gallery-item');
