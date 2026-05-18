@@ -323,7 +323,7 @@
                 <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
             </svg>
         </div>
-        <audio crossorigin="anonymous" id="bgm" loop preload="auto"></audio>
+        <audio crossorigin="anonymous" id="bgm" loop preload="none"></audio>
     </div>
 
     <div class="danmaku-container" id="danmakuBox"></div>
@@ -935,9 +935,11 @@
             const box = document.getElementById("danmakuBox");
             const tracks = 10;
             let currentTrack = 0, timer = null;
+            const interval = window.innerWidth <= 768 ? 4000 : 2000;
 
             function fire() {
                 if (window.pageYOffset < window.innerHeight * 0.8 || document.hidden) return;
+                if (box.childElementCount > 15) return;
                 const text = CONFIG.danmaku[Math.floor(Math.random() * CONFIG.danmaku.length)];
                 const item = document.createElement("div");
                 item.className = "danmaku-item";
@@ -949,10 +951,10 @@
                 item.addEventListener('animationend', () => item.remove());
                 currentTrack++;
             }
-            timer = setInterval(fire, 2000);
+            timer = setInterval(fire, interval);
             document.addEventListener('visibilitychange', () => {
                 if (document.hidden) { clearInterval(timer); }
-                else { timer = setInterval(fire, 2000); }
+                else { timer = setInterval(fire, interval); }
             });
         }
 
@@ -1158,7 +1160,10 @@
                 if (!item) return;
                 const img = item.querySelector('img');
                 if (img && img.dataset.full) {
-                    lightboxImg.src = img.dataset.full;
+                    lightboxImg.src = img.dataset.src;
+                    const full = new Image();
+                    full.onload = () => { lightboxImg.src = img.dataset.full; };
+                    full.src = img.dataset.full;
                     const cap = captions[img.dataset.name];
                     lightboxCaption.textContent = cap || '';
                     lightboxCaption.style.display = cap ? 'block' : 'none';
@@ -1169,6 +1174,9 @@
 
         // === 启动 ===
         window.onload = () => {
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') document.getElementById('lightbox').style.display = 'none';
+            });
             if (window.innerWidth > 768) {
                 document.getElementById('mascot22').src = 'img/22.webp';
                 document.getElementById('mascot33').src = 'img/33.webp';
