@@ -308,9 +308,9 @@
     <div class="bg-system"><div class="bg-pattern-layer"></div></div>
 
     <div class="mascot-container">
-        <img alt="22娘" class="mascot mascot-22" id="mascot22" loading="lazy" src="img/22.png">
-        <img alt="33娘" class="mascot mascot-33" id="mascot33" loading="lazy" src="img/33.png">
-        <img alt="洛天依" class="mascot mascot-luo" id="mascotluo" loading="lazy" src="img/luo.png">
+        <img alt="22娘" class="mascot mascot-22" id="mascot22" loading="lazy">
+        <img alt="33娘" class="mascot mascot-33" id="mascot33" loading="lazy">
+        <img alt="洛天依" class="mascot mascot-luo" id="mascotluo" loading="lazy">
     </div>
 
     <div class="floating-elements" id="particleBox"></div>
@@ -1174,6 +1174,11 @@
 
         // === 启动 ===
         window.onload = () => {
+            if (window.innerWidth > 768) {
+                document.getElementById('mascot22').src = 'img/22.png';
+                document.getElementById('mascot33').src = 'img/33.png';
+                document.getElementById('mascotluo').src = 'img/luo.png';
+            }
             initHeatmap();
             initOdometer();
             initAnimatedNums();
